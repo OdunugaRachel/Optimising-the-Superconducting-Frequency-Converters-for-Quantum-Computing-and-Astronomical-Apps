@@ -7,9 +7,14 @@ This project contains a set of MATLAB scripts to simulate the performance of a T
 The simulation models the TWPA as a long superconducting microstrip transmission line periodically loaded with capacitor-like "fingers". The length of these fingers is modulated along the device, which is the key mechanism for achieving dispersion engineering and, ultimately, parametric gain.
 
 The main outputs of the simulation are:
-1.  **S21 vs. Frequency Plot**: Shows the transmission magnitude through the device.
-2.  **Dispersion Plot (`k` vs. Frequency)**: Shows the propagation constant (wavenumber `k` or `β`) as a function of frequency. This is the most critical output for designing the TWPA, as it determines the phase-matching conditions required for amplification.
-3.  **Saved Data (`.mat` files)**: Key results like the frequency array, S21 data, and calculated dispersion are saved for further analysis.
+1.  **S21 vs. Frequency Plot**: Transmission magnitude through the device, used to assess gain, loss, and overall device performance.
+2.  **Dispersion Plot (`k` vs. Frequency)**: Propagation constant (wavenumber `k` or `β`) as a function of frequency, essential for phase-matching analysis and nonlinear optimization.
+3.  **Saved Data (`.mat` files)**: Frequency array, S21 data, dispersion (`kperm`), and other simulation results for use in further harmonic, efficiency, and parameter sweep analyses.
+4.  **Harmonic Simulation Plots**:
+    - **Output Power vs. Position**: Shows how the power in the pump and harmonics evolves along the device length.
+    - **Output Power vs. Frequency**: Shows harmonic output power as a function of pump frequency.
+5.  **Efficiency and Phase Mismatch Plots**: Conversion efficiency vs. phase mismatch (Δβ), used to optimize nonlinear processes and harmonic generation.
+6.  **Summary Tables and Figures**: Results from parameter sweeps, showing how device performance metrics (gain, bandwidth, phase matching, etc.) change with design choices.
 
 This document serves as a comprehensive guide to the project, explaining the simulation workflow, file structure, and how to use the scripts for analysis and device optimization.
 
