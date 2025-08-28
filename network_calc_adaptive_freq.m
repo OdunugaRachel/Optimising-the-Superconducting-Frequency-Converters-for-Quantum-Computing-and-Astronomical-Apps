@@ -69,7 +69,7 @@ Tc = 14.5;    % Critical temperature of the superconductor (K)
 gap = 0.5 * 3.5 * Tc * kb / ev;   % Superconducting energy gap parameter (J/eV).
 
 
-% Adaptive frequencygrid refinements
+% Adaptive frequency grid refinement based on phase response
 
 phase_jump_threshold = 0.85*pi; % threshold fo the phase jumps
 [f, S21, Lperm, Cperm, Z0, ~] = refine_freq_grid(f, g, ms, gap, kbt, mu0, sn, L, phase_jump_threshold);

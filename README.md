@@ -180,3 +180,100 @@ Write a single script `run_full_analysis.m` that orchestrates the entire workflo
 Add more comments explaining the *why* behind certain formulas, not just the *what*. For example, the source of the `vph = vph./sqrt(1+IcOverIstar^2+IcOverIstar^4)` correction should be cited (e.g., a paper or theory). This context is invaluable for new team members.
 
 By implementing these software engineering best practices, the project will become even more powerful and maintainable for years to come.
+
+## 1.1. Repository File Descriptions & Recommendations
+
+This section provides a concise description of all main files in the repository and recommends the best ones to use for typical simulation and analysis tasks.
+
+### Main Simulation & Analysis Scripts
+
+- **network_calc_adaptive_freq.m**  
+  Simulates the TWPA device using an adaptive frequency grid for efficient and accurate calculation of transmission (S21) and dispersion. **Recommended for most users.**
+
+- **network_calc.m**  
+  Simulates the TWPA device using a fixed frequency grid. Useful for basic simulations or as a reference, but less efficient than the adaptive version.
+
+- **simulate0714harmonics_frequency_optismation.m**  
+  Sweeps pump frequency and models odd harmonic generation using coupled mode equations. Use this for nonlinear/harmonic analysis after generating device data.
+
+- **simulate_cascaded_triplers.m**  
+  Simulates cascaded harmonic generation (e.g., 3rd and 9th harmonics) in multi-stage devices. Recommended for advanced harmonic studies.
+
+- **analyze_5th_harmonic.m**  
+  Focuses on optimizing and analyzing 5th harmonic generation and conversion efficiency. Use for targeted harmonic optimization.
+
+- **analyze_delta_beta_extra.m**  
+  Calculates and visualizes phase mismatch (Δβ) for harmonics as a function of pump frequency. Useful for phase matching analysis.
+
+- **harmonicPlotting.m**  
+  Loads and visualizes experimental harmonic data, overlays simulation results for validation.
+
+### Parameter Sweep & Optimization Scripts
+
+- **run_parameter_sweep_with_summary.m**  
+  Automates parameter sweeps and summarizes results for device optimization.
+
+- **run_parameter_sweep.m**  
+  Similar to above, for systematic exploration of device parameters.
+
+- **run_full_twpa_simulation.m**  
+  Runs a complete TWPA simulation for a given set of parameters.
+
+- **run_full_twpa_simulation_optimal_frequency.m**  
+  Finds optimal pump frequency for gain or harmonic output.
+
+- **run_pump_power_sweep_with_summary.m**  
+  Sweeps pump power to analyze effects on gain and efficiency.
+
+### Core Physics & Utility Functions
+
+- **createTWPA.m**  
+  Initializes a TWPA struct with all necessary fields for simulation.
+
+- **solveCME.m**  
+  Solves the coupled mode equations for harmonic generation.
+
+- **mb2.m**  
+  Calculates Mattis-Bardeen conductivity for superconductors.
+
+- **mstrip_sc_Ls.m**  
+  Calculates inductance and capacitance for superconducting microstrip lines.
+
+- **mstrip.m**  
+  Calculates standard microstrip properties.
+
+- **abcd2s.m**  
+  Converts ABCD matrices to S-parameters.
+
+- **removeHarmonics.m**  
+  Utility for filtering or post-processing harmonics.
+
+- **refine_freq_grid.m**  
+  Implements adaptive frequency grid for efficient simulation.
+
+### Data & Documentation
+
+- **.mat files**  
+  Saved device/network/simulation data for use in analysis scripts.
+
+- **Related pdfs/**  
+  Contains documentation and reference papers for each script and method.
+
+---
+
+### Recommended Usage
+
+- **For new simulations:** Start with `network_calc_adaptive_freq.m` to generate device data.
+- **For harmonic analysis:** Use `simulate0714harmonics_frequency_optismation.m` and `analyze_5th_harmonic.m`.
+- **For advanced studies:** Use `simulate_cascaded_triplers.m` and parameter sweep scripts.
+- **For experimental validation:** Use `harmonicPlotting.m`.
+- **For device setup and physics:** Use the core functions (`createTWPA.m`, `solveCME.m`, etc.) as called by the main scripts.
+
+All scripts are modular and documented. For most users, the adaptive simulation and harmonic analysis scripts are recommended as starting points. Refer to the PDF documentation for deeper background and usage details.
+
+The simulation models the TWPA as a long superconducting microstrip transmission line periodically loaded with capacitor-like "fingers". The length of these fingers is modulated along the device, which is the key mechanism for achieving dispersion engineering and, ultimately, parametric gain.
+
+The main outputs of the simulation are:
+1.  **S21 vs. Frequency Plot**: Shows the transmission magnitude through the device.
+2.  **Dispersion Plot (`k` vs. Frequency)**: Shows the propagation constant (wavenumber `k` or `β`) as a function of frequency. This is the most critical output for designing the TWPA, as it determines the phase-matching conditions required for amplification.
+3.  **Saved Data (`.mat` files)**: Key results like the frequency array, S21 data, and calculated dispersion are saved for further analysis.

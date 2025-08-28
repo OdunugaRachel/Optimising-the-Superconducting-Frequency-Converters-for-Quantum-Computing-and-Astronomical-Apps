@@ -18,7 +18,9 @@ function [f_refined, S21, Lperm, Cperm, Z0, vph] = refine_freq_grid(f_init, g, m
 %   Z0: Characteristic impedance for the refined grid (Ω)
 %   vph: Phase velocity for the refined grid (m/s)
 
-    max_iter = 10;
+    max_iter = 10; % Maximum number of refinement iterations
+    % This can be adjusted based on expected complexity of the frequency response
+    % to avoid infinite loops in case of unexpected behavior.
     ev = 1.6e-19;
 
     for iter = 1:max_iter
