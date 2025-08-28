@@ -1,4 +1,7 @@
- 
+% This script simulates the harmonic generation in a TWPA (Traveling Wave Parametric Amplifier)
+% for harmonic that can be supported by the frequency range of the loaded data.
+% Optimizes the pump frequency for maximum output at a chosen harmonic.
+
 clear
 
 %% Initialize TWPA
@@ -52,7 +55,7 @@ fcalc = 0.1e9:0.01e9:5.1e9;  % pump frequencies
 
 
 % Determine the highest possible harmonic that can be simulated for the *entire*
-% pump frequency sweep, based on the available frequency range in the loaded data.
+% pump frequency array, based on the available frequency range in the loaded data.
 potential_harmonics = 9:-2:1; % Check from highest to lowest
 max_pump_freq = max(fcalc);
 max_available_freq = max(twpa.fsim);

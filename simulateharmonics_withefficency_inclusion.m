@@ -1,3 +1,6 @@
+% This script simulates the harmonic generation in a TWPA (Traveling Wave Parametric Amplifier)
+% It includes the calculation of phase mismatch (delta beta) and efficiency of the 3rd harmonic generation
+% and plots delta beta against efficiency, marking the point of maximum efficiency. 
 
 clear
 
@@ -128,8 +131,7 @@ drawnow
 
 
 
-%% Delta beta vs efficiency plot 
-
+%% Delta beta vs efficiency plot and max efficiency point
 
 % Set up arrays for delta beta and efficiency
 delta_beta = zeros(size(fcalc));
@@ -183,6 +185,8 @@ set(gca,'FontWeight','bold')
 set(gcf,'Position',[1500 100 1500 1000]) % Use a valid position vector
 drawnow
 saveas(f5, 'DeltaBeta_vs_Efficiency.png')
+
+% code below was a check to ensure energy conservation
 
 % %% Sum of squared amplitudes vs position (energy conservation along device)
 % sum_sq_pos = zeros(length(zcalc),1);
