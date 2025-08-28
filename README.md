@@ -158,27 +158,7 @@ simulate0714harmonics_frequency_optismation.m
 
 ---
 
-## 2.4. Extras & Bonuses
 
-These scripts are central to understanding the nonlinear behavior and harmonic generation in the TWPA. They use the output of the network/diffraction simulation (e.g., `kperm`, `S21`) and model the coupled mode equations for parametric amplification and frequency conversion.
-
-**`simulate_cascaded_triplers.m`**
-*   **Purpose**: Simulates a two-stage device where the output of the first tripler (3rd harmonic generator) is used to pump a second tripler, enabling efficient generation of higher harmonics (e.g., 9th harmonic).
-*   **Inputs**: Two `.mat` files for each stage, plus the output current from the first stage.
-*   **Outputs**: Plots the evolution of harmonics in both stages, saves figures, and outputs the final harmonic currents.
-*   **Usage**: Use this script to study cascaded harmonic generation and device optimization for high-order harmonics.
-
-**`analyze_5th_harmonic.m`**
-*   **Purpose**: Focused analysis of 5th harmonic generation, including frequency optimization and conversion efficiency vs. phase mismatch.
-*   **Inputs**: Device `.mat` file, simulation parameters.
-*   **Outputs**: Plots optimal pump frequency for 5th harmonic, conversion efficiency vs. phase mismatch, and saves results.
-*   **Usage**: Use this script to optimize the device for strong 5th harmonic output.
-
-**`harmonicPlotting.m`**
-*   **Purpose**: Loads and visualizes experimental data (CSV files) from spectrum analyzer measurements, normalizes and overlays harmonic power traces for comparison with simulation.
-*   **Inputs**: CSV files containing measured harmonic powers, reference S-parameter files.
-*   **Outputs**: Plots normalized harmonic power vs. pump power, overlays multiple harmonics, and saves figures.
-*   **Usage**: Use this script to analyze experimental results and validate simulation predictions.
 
 
 # 4. Parameter Sweep Scripts
@@ -242,7 +222,29 @@ run_parameter_sweep_with_summary.m / run_parameter_sweep.m
 
 This workflow enables systematic exploration and optimization of the TWPA design space.
 
-## 5. Core Functions Used Throughout
+## 5. Extras & Bonuses
+
+These scripts are central to understanding the nonlinear behavior and harmonic generation in the TWPA. They use the output of the network/diffraction simulation (e.g., `kperm`, `S21`) and model the coupled mode equations for parametric amplification and frequency conversion.
+
+**`simulate_cascaded_triplers.m`**
+*   **Purpose**: Simulates a two-stage device where the output of the first tripler (3rd harmonic generator) is used to pump a second tripler, enabling efficient generation of higher harmonics (e.g., 9th harmonic).
+*   **Inputs**: Two `.mat` files for each stage, plus the output current from the first stage.
+*   **Outputs**: Plots the evolution of harmonics in both stages, saves figures, and outputs the final harmonic currents.
+*   **Usage**: Use this script to study cascaded harmonic generation and device optimization for high-order harmonics.
+
+**`analyze_5th_harmonic.m`**
+*   **Purpose**: Focused analysis of 5th harmonic generation, including frequency optimization and conversion efficiency vs. phase mismatch.
+*   **Inputs**: Device `.mat` file, simulation parameters.
+*   **Outputs**: Plots optimal pump frequency for 5th harmonic, conversion efficiency vs. phase mismatch, and saves results.
+*   **Usage**: Use this script to optimize the device for strong 5th harmonic output.
+
+**`harmonicPlotting.m`**
+*   **Purpose**: Loads and visualizes experimental data (CSV files) from spectrum analyzer measurements, normalizes and overlays harmonic power traces for comparison with simulation.
+*   **Inputs**: CSV files containing measured harmonic powers, reference S-parameter files.
+*   **Outputs**: Plots normalized harmonic power vs. pump power, overlays multiple harmonics, and saves figures.
+*   **Usage**: Use this script to analyze experimental results and validate simulation predictions.
+
+## 6. Core Functions Used Throughout
 
 These functions are called by the main scripts and parameter sweeps. They encapsulate the physics and numerical methods:
 
@@ -258,7 +260,7 @@ These functions are called by the main scripts and parameter sweeps. They encaps
 ---
 
 
-## 6. How Everything Fits Together
+## 7. How Everything Fits Together
 
 1. **Start with device/network simulation** (`network_calc_adaptive_freq.m` or `network_calc.m`) to generate `.mat` files with device parameters.
 2. **Run harmonic simulation scripts** (`simulate0714harmonics_frequency_optismation.m`, `simulate_cascaded_triplers.m`, etc.) to model nonlinear behavior and harmonic generation.
@@ -269,7 +271,7 @@ These functions are called by the main scripts and parameter sweeps. They encaps
 
 ---
 
-## 2.9. Summary Table of Key Files
+## 8. Summary Table of Key Files
 
 | File Name                                      | Purpose/Functionality                                                      |
 |------------------------------------------------|----------------------------------------------------------------------------|
