@@ -1,25 +1,13 @@
-% analyze_5th_harmonic.m
-%
-% This script performs a comprehensive analysis of the 5th harmonic generation
-% in a Traveling Wave Parametric Amplifier (TWPA). It combines two main tasks:
-%
-% 1. Frequency Optimization: It sweeps through a range of pump frequencies to
-%    find the optimal frequency that maximizes the output power of the 5th harmonic.
-%
-% 2. Efficiency Analysis: It calculates and plots the conversion efficiency to
-%    the 5th harmonic as a function of the phase mismatch (Δβ).
-%
-% This script keeps original simulation files unchanged by performing all
-% analysis in a single, self-contained file.
+% This script analyzes the 5th harmonic generation in a TWPA (Traveling Wave Parametric Amplifier).
+% It includes the calculation of phase mismatch (delta beta) and efficiency of the 5th harmonic generation
+% and plots delta beta against efficiency, marking the point of maximum efficiency.
 
 clear;
 close all;
 tic;
 
-%% ========================================================================
-%  1. INITIALIZE TWPA AND SIMULATION PARAMETERS
-%  ========================================================================
-disp('--- Initializing TWPA and loading data ---');
+% I have an inkling that a bunch of this code is duplicated from the other files and a bit redundant but it still works so I'm leaving it for now
+%% 1. INITIALIZE TWPA AND SIMULATION PARAMETERS
 
 % Load pre-calculated network properties
 load 0714TWPaX.mat;
@@ -41,10 +29,7 @@ twpa.Idc = twpa.Istar * 0.0; % DC Bias current
 twpa.len = len_meters; % Use length from the loaded .mat file for consistency
 twpa.betanl = 1;       % Nonlinearity parameter
 
-%% ========================================================================
-%  2. DEFINE MODES AND SIMULATION SWEEP
-%  ========================================================================
-disp('--- Defining simulation modes and sweep parameters ---');
+%% 2. DEFINE MODES AND SIMULATION SWEEP
 
 % Define which harmonic to analyze. This makes the script easily adaptable.
 harmonic_to_analyze = 5;
@@ -79,10 +64,7 @@ disp(twpa.modes);
 twpa.I0 = zeros(length(twpa.modes), 1);
 twpa.I0(1) = twpa.Ip;
 
-%% ========================================================================
-%  3. COMPUTE HARMONIC POWER (MAIN SIMULATION LOOP)
-%  ========================================================================
-disp('--- Starting main simulation loop (this may take a while) ---');
+%%  3. COMPUTE HARMONIC POWER (MAIN SIMULATION LOOP)
 
 % Positions to sample along the device
 zcalc = 0:0.0001:twpa.len;
@@ -90,7 +72,7 @@ zcalc = 0:0.0001:twpa.len;
 % Pre-allocate gain array
 g = zeros(length(fcalc), length(zcalc), length(twpa.modes));
 
-% Use a parallel pool for speed if available
+%  starting a parallel pool to speed up the simulation
 if isempty(gcp('nocreate'))
     disp('Starting parallel pool...');
     parpool;
@@ -104,23 +86,18 @@ parfor ii = 1:length(fcalc)
     % Calculate S21 for the current set of frequencies
     S21_val = exp((-twpa_local.g(wn.') + 1i.*twpa_local.k(wn.')).*twpa_local.len);
 
-    % Solve the Coupled Mode Equations
     Y = solveCME(fcalc(ii), zcalc, twpa_local);
 
     % Calculate power in dB relative to the input pump power
     g(ii,:,:) = 20*log10(abs(Y(:,:).*S21_val./twpa_local.I0(1)));
     
-    % Display progress (inside a parfor, this might be messy but is useful)
     if mod(ii, 20) == 0
         fprintf('Progress: %.1f%%\n', (ii/length(fcalc))*100);
     end
 end
 disp('--- Main simulation finished ---');
 
-%% ========================================================================
-%  4. ANALYSIS PART A: FIND OPTIMAL PUMP FREQUENCY
-%  ========================================================================
-disp('--- Analyzing for optimal pump frequency ---');
+%%  4. ANALYSIS PART A: FIND OPTIMAL PUMP FREQUENCY
 
 % Calculate the index for the harmonic we want to analyze
 % e.g., for 5p, modes are [1 0; 3 0; 5 0; ...], so 5p is the 3rd mode.
@@ -154,10 +131,7 @@ set(gca,'FontSize',14,'FontWeight','bold');
 set(gcf,'Position',[100 100 1200 800]);
 drawnow;
 
-%% ========================================================================
-%  5. ANALYSIS PART B: CONVERSION EFFICIENCY VS. PHASE MISMATCH
-%  ========================================================================
-disp('--- Analyzing conversion efficiency vs. phase mismatch ---');
+%%  5. ANALYSIS PART B: CONVERSION EFFICIENCY VS. PHASE MISMATCH
 
 % Set up arrays for delta beta and efficiency
 delta_beta = zeros(size(fcalc));
@@ -201,10 +175,7 @@ set(gca,'FontSize',14,'FontWeight','bold');
 set(gcf,'Position',[1350 100 1200 800]);
 drawnow;
 
-%% ========================================================================
-%  6. SAVE RESULTS
-%  ========================================================================
-disp('--- Saving plots ---');
+%%   6. SAVE RESULTS
 
 % Create a directory for the output if it doesn't exist
 output_dir = '5th_Harmonic_Analysis_Results';

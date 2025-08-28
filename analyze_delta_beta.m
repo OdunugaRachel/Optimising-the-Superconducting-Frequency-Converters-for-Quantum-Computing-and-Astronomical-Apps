@@ -1,3 +1,6 @@
+% This script analyzes the phase mismatch (delta beta) for various harmonics in a TWPA
+% It calculates delta beta for specified harmonics over a range of pump frequencies
+
 clear 
 %close all
 tic;

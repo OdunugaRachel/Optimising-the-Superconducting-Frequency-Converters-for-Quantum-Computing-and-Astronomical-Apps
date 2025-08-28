@@ -1,3 +1,7 @@
+
+% This script simulates the cascading of two tripler TWPAs (Traveling Wave Parametric Amplifiers).
+% The output of the first tripler (3rd harmonic) is used as the pump for the second tripler.
+
 clear
 tic
 
