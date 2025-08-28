@@ -1,10 +1,10 @@
 function run_parameter_sweep_with_summary()
-% RUN_GEOMETRY_SWEEP_WITH_SUMMARY Sweeps a geometry parameter and generates a summary plot.
+% This script sweeps a geometry parameter and generates a summary plot.
 %
 %   This script systematically varies a single geometry parameter (e.g., 
 %   modperiod, modamp, or unit_cells), runs the full simulation for each 
 %   value to find the optimal pump frequency, and then creates a final 
-%   summary plot visualizing the results.
+%   summary plot visualizing the results and also generates plots for each simulation.
 %
 %   Instructions:
 %   1. Choose ONE parameter to sweep by uncommenting the desired block below.
@@ -15,9 +15,7 @@ function run_parameter_sweep_with_summary()
 
 close all;
 
-%% ========================================================================
-%  SWEEP CONFIGURATION
-%  ========================================================================
+%% Setting up the sweep
 
 % --- Choose ONE parameter to sweep by uncommenting the desired block ---
 
@@ -39,13 +37,12 @@ sweep_values = linspace(500, 900, 40);
 base_params.modperiod = 120;
 base_params.modamp = 3.9;
 
-% --- Set common parameters for the sweep ---
+% Set common parameters for the sweep
 pump_ratio = 0.13; % A single, constant pump power ratio for this sweep
 harmonic_to_optimize_for = 3; % Which harmonic to optimize for (e.g., 3, 5)
 
-%% ========================================================================
-%  RUN SWEEP & COLLECT DATA
-%  ========================================================================
+%%  Sweeping parameter and running simulations
+
 output_folder_name = ['Sweep_vs_', param_to_sweep];
 
 % Pre-allocate arrays to store results for the final summary plot
@@ -64,10 +61,7 @@ for i = 1:length(sweep_values)
     max_powers(i) = max_pwr;
 end
 
-%% ========================================================================
-%  GENERATE SUMMARY PLOT
-%  ========================================================================
-disp('--- Generating Summary Plot ---');
+%% SUMMARY PLOT
 
 valid_indices = ~isnan(optimal_frequencies);
 if ~any(valid_indices), warning('No valid optimal frequencies found. Skipping summary plot.'); return; end
@@ -75,7 +69,9 @@ if ~any(valid_indices), warning('No valid optimal frequencies found. Skipping su
 f_summary = figure;
 colororder({'b','r'});
 scatter(sweep_values(valid_indices), optimal_frequencies(valid_indices), 75, 'filled', 'DisplayName', 'Optimal Frequency');
-hold on; plot(sweep_values(valid_indices), optimal_frequencies(valid_indices), '--b', 'HandleVisibility', 'off'); grid on;
+hold on; 
+plot(sweep_values(valid_indices), optimal_frequencies(valid_indices), '--b', 'HandleVisibility', 'off'); 
+grid on;
 xlabel(['Swept Parameter: ', strrep(param_to_sweep, '_', ' ')]);
 ylabel(sprintf('Optimal Pump Frequency for %dp (GHz)', harmonic_to_optimize_for));
 title(['Optimization Summary vs. ', strrep(param_to_sweep, '_', ' ')]);
@@ -86,6 +82,8 @@ legend('Location', 'best');
 set(gca,'FontSize',12,'FontWeight','bold');
 
 summary_filename = sprintf('Summary_vs_%s_for_%dp.png', param_to_sweep, harmonic_to_optimize_for);
+
+% change directory to where you want to save the summary plot
 saveas(f_summary, fullfile('Broader Frequency Range Successes', output_folder_name, summary_filename));
 close(f_summary);
 

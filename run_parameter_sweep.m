@@ -1,5 +1,5 @@
 function run_parameter_sweep()
-% RUN_PARAMETER_SWEEP Sweeps a single geometry parameter and runs the full simulation for each value.
+% This script takes a single geometry parameter and runs the full simulation for each value.
 %
 %   This script allows you to easily test the effect of changing one
 %   parameter (e.g., modperiod, modamp, or unit_cells) while keeping others
@@ -14,11 +14,9 @@ function run_parameter_sweep()
 
 close all;
 
-%% ========================================================================
-%  SWEEP CONFIGURATION
-%  ========================================================================
+%% Setting up the sweep
 
-% --- Choose ONE parameter to sweep by uncommenting the desired block ---
+%  Choose ONE parameter to sweep by uncommenting the desired block
 
 % % 1. Sweep Modulation Period
 % param_to_sweep = 'modperiod';
@@ -38,13 +36,13 @@ base_params.unit_cells = 830;
 % base_params.modperiod = 90;
 % base_params.modamp = 7;
 
-% --- Set common parameters for the sweep ---
+%set common parameters for the sweep 
 pump_ratio = 0.13; % A single, constant pump power ratio for this sweep
+
+% Uncomment the line below to run the simulation with optimal frequency
 %harmonic_to_optimize_for = 3; % Which harmonic to optimize for (e.g., 3, 5), when using optimal frequency simulation
 
-%% ========================================================================
-%  RUN SWEEP (No changes needed below this line)
-%  ========================================================================
+%% Run sweep - no changes needed below this line
 
 % Determine output folder name based on the parameter being swept
 switch param_to_sweep
@@ -58,6 +56,8 @@ switch param_to_sweep
         % A sensible default if a new parameter is added without a case
         output_folder_name = [param_to_sweep, '_Sweep'];
 end
+
+% can call the eithier the fixed frequency or optimal frequency version of the simulation
 
 for i = 1:length(sweep_values)
     geometry_params = base_params;

@@ -1,9 +1,9 @@
 function [optimal_pump_freq_GHz, max_power_dB] = run_full_twpa_simulation_optimal_frequency(geometry_params, pump_ratio, output_folder_name, harmonic_to_optimize_for)
-% RUN_FULL_TWPA_SIMULATION Combines network calculation and harmonic simulation into a single workflow.
+% This script combines network calculation and harmonic simulation into a single file.
 %
 %   This script first calculates the physical properties (dispersion, S21) of a
 %   TWPA based on its geometry, and then immediately uses those properties to
-%   simulate harmonic generation for a range of pump powers.
+%   simulate harmonic generation for a range of pump powers at an optimal pump frequency.
 %
 %   INPUTS:
 %   geometry_params: A struct with fields 'modperiod', 'modamp', 'unit_cells'.
@@ -12,20 +12,18 @@ function [optimal_pump_freq_GHz, max_power_dB] = run_full_twpa_simulation_optima
 %   harmonic_to_optimize_for: The harmonic (e.g., 3, 5) to optimize for.
 %
 %   OUTPUTS:
-%   optimal_pump_freq_GHz: The pump frequency in GHz that yielded max power. Returns NaN if optimization fails.
-%   max_power_dB: The maximum power in dB achieved for the specified harmonic. Returns NaN if optimization fails.
-
-% clear; % Clearing variables is handled by the calling script (e.g., run_parameter_sweep)
+%   Plot files are saved in the specified output folder.
+%
+%  This script is designed to be called from other scripts that perform parameter sweeps.
+%
+% clear;
 % close all;
 tic;
 
 
-%% ========================================================================
-%  PART 1: NETWORK CALCULATION (from network_calc_adaptive_freq.m)
-%  ========================================================================
-disp('--- PART 1: Calculating Network Properties from Geometry ---');
+%%  PART 1: NETWORK CALCULATION (from network_calc_adaptive_freq.m)
 
-% Define geometry and modulation parameters. This is the single source of truth.
+% Define geometry and modulation parameters.
 g.finger.l = 20;
 g.finger.w = 0.25;
 g.finger.p = 0.87;
@@ -35,6 +33,8 @@ g.ms.eps = 10.3;
 g.ms.eps_upper = 10.4;
 g.ms.t1 = 0.030;
 g.ms.t2 = 0.200;
+
+% This comes from the sweepin script that gives the geometry_params struct
 g.finger.modperiod = geometry_params.modperiod;
 g.finger.modamp = geometry_params.modamp;
 unit_cells = geometry_params.unit_cells;
@@ -54,12 +54,9 @@ gap = 0.5 * 3.5 * Tc * kb / ev;
 ms = g.ms;
 
 % Run adaptive frequency grid calculation
-disp('Starting network calculation with adaptive frequency grid...');
-phase_jump_threshold = 0.85 * pi; % Threshold for phase jumps
+phase_jump_threshold = 0.85 * pi; % Threshold for phase jumps, change if needed
 [f, S21, ~, ~, ~, ~] = refine_freq_grid(f_initial, g, ms, gap, kbt, mu0, sn, L, phase_jump_threshold);
-disp('Network calculation finished.');
 
-% Post-process to get dispersion (kperm)
 uth = -1*unwrap(angle(S21(:)));
 for fj = 2:length(f)
     while uth(fj)<uth(fj-1)
@@ -72,10 +69,8 @@ uth = uth - intercept;
 len_meters = L / 1e6; % Convert length to meters
 kperm = uth / len_meters;
 
-%% ========================================================================
-%  PART 2: HARMONIC SIMULATION (from simulate0714harmonics_series.m)
-%  ========================================================================
-disp('--- PART 2: Simulating Harmonic Generation ---');
+%% PART 2: HARMONIC SIMULATION (from simulate0714harmonics_series.m)
+
 
 % Initialize TWPA struct
 twpa = createTWPA;
@@ -99,7 +94,8 @@ fcalc = 0.1e9:0.01e9:4.3e9;
 
 % Pick Modes
 % Determine the highest possible harmonic that can be simulated for the *entire*
-% pump frequency sweep, based on the available frequency range from the network calculation.
+% pump frequency array, based on the available frequency range from the network calculation.
+% doesn't calculate the harmonic, if the harmonic exceeds the max frequency in the data
 potential_harmonics = 9:-2:1; % Check from highest to lowest
 max_pump_freq = max(fcalc);
 max_available_freq = max(twpa.fsim);
@@ -121,7 +117,7 @@ disp('Simulating modes:');
 disp(twpa.modes);
 twpa.I0 = zeros(length(twpa.modes),1);
 
-% --- COMPUTATION STAGE ---
+% starting a parallel pool so we can speed up the simulations
 if isempty(gcp('nocreate'))
     disp('Starting parallel pool...');
     parpool;
@@ -172,8 +168,10 @@ else
     plot_title_text = sprintf('Power vs Position at Optimal Freq for %dp (%.2f GHz)', harmonic_to_optimize_for, optimal_pump_freq_GHz);
 end
 
-% --- PLOTTING STAGE ---
-disp('All calculations finished. Now generating plots...');
+%  plotting and saving results
+
+% change directory to where you want to save the plots
+
 output_dir = fullfile('Broader Frequency Range Successes', output_folder_name);
 if ~exist(output_dir, 'dir'), mkdir(output_dir); end
 
@@ -220,7 +218,6 @@ for h_idx = 1:ceil(maxHarmonic/2)
 end
 legend(plotLegend, 'Location', 'best'); grid on; xlabel('Position (Normalized)'); ylabel('Output Power (dB)'); title(plot_title_text); set(gca,'FontSize',10,'FontWeight','bold');
 
-% Add a main title and save with a descriptive name
 main_title = sprintf('Full Sim: modperiod=%.3f, modamp=%.3f, cells=%d, ratio=%.3f', g.finger.modperiod, g.finger.modamp, unit_cells, current_ratio);
 sgtitle(f_handle, main_title);
 output_filename = sprintf('Full_Sim_modperiod_%.3f_modamp_%.3f_cells_%d_ratio_%.3f.png', g.finger.modperiod, g.finger.modamp, unit_cells, current_ratio);

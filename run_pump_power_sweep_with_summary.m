@@ -1,4 +1,6 @@
 function run_pump_power_sweep_with_summary()
+% This script sweeps the pump power ratio and generates a summary plot
+% and individual plots for each simulation.
 
 close all;
 
@@ -32,15 +34,15 @@ for i = 1:length(sweep_values)
 end
 
 %% Summary Plot
-disp('--- Generating Summary Plot ---');
-
 valid_indices = ~isnan(optimal_frequencies);
 if ~any(valid_indices), warning('No valid optimal frequencies found. Skipping summary plot.'); return; end
 
 f_summary = figure;
 colororder({'b','r'});
 scatter(sweep_values(valid_indices), optimal_frequencies(valid_indices), 75, 'filled', 'DisplayName', 'Optimal Frequency');
-hold on; plot(sweep_values(valid_indices), optimal_frequencies(valid_indices), '--b', 'HandleVisibility', 'off'); grid on;
+hold on; 
+plot(sweep_values(valid_indices), optimal_frequencies(valid_indices), '--b', 'HandleVisibility', 'off'); 
+grid on;
 xlabel('Pump Power Ratio (Ip/Istar)');
 ylabel(sprintf('Optimal Pump Frequency for %dp (GHz)', harmonic_to_optimize_for));
 title(['Optimization Summary vs. Pump Power Ratio']);
@@ -51,6 +53,8 @@ legend('Location', 'best');
 set(gca,'FontSize',12,'FontWeight','bold');
 
 summary_filename = sprintf('Summary_vs_%s_for_%dp.png', param_to_sweep, harmonic_to_optimize_for);
+
+% change directory to where you want to save the summary plot
 saveas(f_summary, fullfile('Secure Third Harmonic Generation', output_folder_name, summary_filename));
 close(f_summary);
 
