@@ -289,8 +289,8 @@ These functions are called by the main scripts and parameter sweeps. They encaps
 | simulate0714harmonics.m                        | Harmonic simulation at fixed pump frequency (detailed evolution)           |
 | simulate_cascaded_triplers.m                   | Cascaded harmonic simulation (multi-stage, advanced studies)               |
 | analyze_5th_harmonic.m                         | 5th harmonic optimization and efficiency analysis                          |
-| analyze_delta_beta.m, analyze_delta_beta_extra.m| Phase mismatch (Δβ) analysis for harmonics                                 |
-| simulateharmonics_withefficency_inclusion.m     | Harmonic simulation with efficiency/Δβ optimization                        |
+| analyze_delta_beta.m                           | Phase mismatch (Δβ) analysis for harmonics                                 |
+| simulateharmonics_withefficency_inclusion.m    | Harmonic simulation with efficiency/Δβ optimization                        |
 | harmonicPlotting.m                             | Experimental data analysis and visualization                               |
 |                                                |                                                                            |
 | **Parameter Sweep & Optimization Scripts**     |                                                                            |
