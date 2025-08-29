@@ -204,4 +204,6 @@ set(gcf,'Position',[1500 100 1500 1000])
 title('Tripler 2: Output Power vs Frequency')
 drawnow
 
+saveas(f14, 'Cascaded_Tripler_Frequency.png');
+
 toc
