@@ -18,6 +18,7 @@ The main outputs of the simulation are:
 
 This document serves as a comprehensive guide to the project, explaining the simulation workflow, file structure, and how to use the scripts for analysis and device optimization.
 
+Results and takeaways can be found at https://nonstop-beet-810.notion.site/Optimising-the-superconducting-quantum-frequency-converter-for-quantum-computing-and-astronomical-ap-25e6498bcee78048ba08ec6737306199
 ---
 ## 2. Dispersion Simulaton Scripts
 
