@@ -169,25 +169,7 @@ set(gcf,'Position',[1500 100 1500 1000])
 title(sprintf('Output Power vs Position at Optimal Pump Freq for %dp (%.2f GHz)', harmonic_to_optimize_for, optimal_pump_freq_GHz));
 drawnow
 
-%%
-
-% --- Plot End Current ---
-f5 = figure(5);
-hold all
-plotLegend = {};
-for i=1:ceil(maxHarmonic/2)
-    plot(fcalc./1e9, abs(Iend(:,i)), 'Linewidth', 2)
-    plotLegend = [plotLegend, {[num2str(1 + 2*(i-1)),'p']}];
-end
-legend(plotLegend, 'Location', 'best')
-grid on
-xlim([fcalc(1) fcalc(end)]./1e9)
-xlabel('Frequency (GHz)')
-ylabel('End Current Magnitude (A)')
-title('Magnitude of End Current vs. Frequency')
-set(gca,'FontSize',16, 'FontWeight','bold')
-set(gcf,'Position',[100 1500 1500 1000])
-drawnow
+%% 
 
 saveas(f3, 'Frequency_Power.png')
 saveas(f4, 'BestFrequency_Harmonics.png')

@@ -8,34 +8,34 @@ tic
 %finger = finger parameters
 %twpa = travelling wave parametric amplifier
 
-g.finger.l = 26;  %length of a capacitor 'finger', um add a bit to represent fringe effects
+g.finger.l = 24;  %length of a capacitor 'finger', um add a bit to represent fringe effects
 g.finger.w = 0.25; % dON't %.25;  %width of the microstrip line (and fingers)
 
 % i thought that the width of the fingers didn't have to match the width of the microstrip line
 
-g.finger.p = 2;    %period of the fingers (spacing between fingers), μm
+g.finger.p = 1;    %period of the fingers (spacing between fingers), μm
 
 % g.finger.l, g.finger.w and g.finger.p all directly influence the characterstic imedpedance of the microstrip
 
 %% Don't change these parameters
 
 g.ms.w = g.finger.w; %
-g.ms.h = 0.19; %dielectric thickness
+g.ms.h = 0.15; %dielectric thickness
 g.ms.eps = 10.3;  %dielectric epsilon
 g.ms.eps_upper = 10.4;
-g.ms.t1 = 0.035;  %microstrip conductor metal *thickness*
+g.ms.t1 = 0.030;  %microstrip conductor metal *thickness*
 g.ms.t2 = 0.200;    %ground plane *thickness*
 
 %% modulation parameters
 
 %g.finger.modperiod = 50; %period of the modulation, μm
-g.finger.modperiod = 110;
+g.finger.modperiod = 90;
 %   the length over+ which the finger pattern repeats.
-g.finger.modamp = 4; %modulation amplitude, μm, 
+g.finger.modamp = 6.2; %modulation amplitude, μm, 
 % 7 seems to be the max value that wokes without the frequency cutting off (with the intial gemotery parameters)
 % controls how much the finger length varies.
 
-unit_cells = 500;
+unit_cells = 900;
 
 L = g.finger.modperiod*unit_cells; % Total length of the device (μm)
 % the change in the length, make little differnece on the dispersion but has a big effect on the gain
@@ -48,7 +48,7 @@ f = linspace( .01, 50.01, 60000)*1e9;
 % 50 GHz is the upper limit of the simulation, this is the frequency at which the gain starts to drop off
 
 %resistivities to consider
-rhon = 260.*1e-8; %film resistivity, ohm.m
+rhon = 480.*1e-8; %film resistivity, ohm.m
 sn = 1 / rhon;  %normal state conductivity, (1/Ω·m), inverse of resistivity
 
 %loop over position
